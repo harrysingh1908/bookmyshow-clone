@@ -1,0 +1,145 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: bms-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bms}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bms_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-bms}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-bms}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: bms-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  user-service:
+    build: ./services/user-service
+    container_name: bms-user-service
+    env_file: .env
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  movie-service:
+    build: ./services/movie-service
+    container_name: bms-movie-service
+    env_file: .env
+    ports:
+      - "8002:8002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  event-service:
+    build: ./services/event-service
+    container_name: bms-event-service
+    env_file: .env
+    ports:
+      - "8003:8003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  theatre-service:
+    build: ./services/theatre-service
+    container_name: bms-theatre-service
+    env_file: .env
+    ports:
+      - "8004:8004"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  booking-service:
+    build: ./services/booking-service
+    container_name: bms-booking-service
+    env_file: .env
+    ports:
+      - "8005:8005"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  payment-service:
+    build: ./services/payment-service
+    container_name: bms-payment-service
+    env_file: .env
+    ports:
+      - "8006:8006"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  review-service:
+    build: ./services/review-service
+    container_name: bms-review-service
+    env_file: .env
+    ports:
+      - "8007:8007"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api-gateway:
+    build: ./services/api-gateway
+    container_name: bms-api-gateway
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - user-service
+      - movie-service
+      - event-service
+      - theatre-service
+      - booking-service
+      - payment-service
+      - review-service
+
+  seed:
+    build: ./scripts
+    container_name: bms-seed
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      movie-service:
+        condition: service_started
+      theatre-service:
+        condition: service_started
+      event-service:
+        condition: service_started
+    restart: "no"
+
+  frontend:
+    build: ./frontend
+    container_name: bms-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+
+volumes:
+  pgdata:
