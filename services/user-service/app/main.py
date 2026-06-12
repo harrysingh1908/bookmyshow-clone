@@ -63,7 +63,7 @@ def register(payload: UserRegister, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
-    token = create_access_token(user.id, user.email)
+    token = create_access_token(user.id, user.email, user.name)
     return TokenResponse(access_token=token, user=UserOut.from_orm(user))
 
 
@@ -72,7 +72,7 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
     if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")
-    token = create_access_token(user.id, user.email)
+    token = create_access_token(user.id, user.email, user.name)
     return TokenResponse(access_token=token, user=UserOut.from_orm(user))
 
 
