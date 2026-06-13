@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f5f5fa;
+  color: #1a1a2e;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: "Montserrat", sans-serif;
+}
+
+/* hide scrollbar for horizontal scrollers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@layer components {
+  .btn-red {
+    @apply bg-bms-red hover:bg-bms-red-dark text-white font-semibold rounded
+      px-5 py-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .container-bms {
+    @apply max-w-[1240px] mx-auto px-4;
+  }
+}
