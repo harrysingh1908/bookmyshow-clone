@@ -22,6 +22,7 @@ class Booking(Base):
     quantity = Column(Integer, nullable=False, default=0)
     subtotal = Column(Float, nullable=False, default=0.0)
     convenience_fee = Column(Float, nullable=False, default=0.0)
+    addons = Column(Float, nullable=False, default=0.0)
     discount = Column(Float, nullable=False, default=0.0)
     total = Column(Float, nullable=False, default=0.0)
     status = Column(String, nullable=False, default="confirmed")  # confirmed | cancelled

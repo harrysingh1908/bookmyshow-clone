@@ -29,6 +29,7 @@ class ConfirmRequest(BaseModel):
     venue: str = ""
     show_datetime: str = ""
     discount: float = 0.0
+    addons: float = 0.0
     promo_code: Optional[str] = None
     # event line items
     unit_price: float = 0.0
@@ -47,6 +48,7 @@ class BookingOut(BaseModel):
     quantity: int
     subtotal: float
     convenience_fee: float
+    addons: float
     discount: float
     total: float
     status: str

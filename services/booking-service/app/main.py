@@ -124,7 +124,7 @@ def confirm_booking(
         seats = _fetch_seats(payload.seat_ids)
         subtotal = sum(s["price"] for s in seats)
         fee = CONVENIENCE_FEE_PER_TICKET * len(payload.seat_ids)
-        total = max(0.0, subtotal + fee - payload.discount)
+        total = max(0.0, subtotal + fee + payload.addons - payload.discount)
 
         booking = Booking(
             user_id=user_id,
@@ -137,6 +137,7 @@ def confirm_booking(
             quantity=len(payload.seat_ids),
             subtotal=subtotal,
             convenience_fee=fee,
+            addons=payload.addons,
             discount=payload.discount,
             total=total,
             status="confirmed",
@@ -174,7 +175,7 @@ def confirm_booking(
         raise HTTPException(status_code=400, detail="quantity required for event booking")
     subtotal = payload.unit_price * payload.quantity
     fee = CONVENIENCE_FEE_PER_TICKET * payload.quantity
-    total = max(0.0, subtotal + fee - payload.discount)
+    total = max(0.0, subtotal + fee + payload.addons - payload.discount)
     booking = Booking(
         user_id=user_id,
         booking_type="event",
@@ -186,6 +187,7 @@ def confirm_booking(
         quantity=payload.quantity,
         subtotal=subtotal,
         convenience_fee=fee,
+        addons=payload.addons,
         discount=payload.discount,
         total=total,
         status="confirmed",

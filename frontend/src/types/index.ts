@@ -139,6 +139,7 @@ export interface Booking {
   quantity: number;
   subtotal: number;
   convenience_fee: number;
+  addons: number;
   discount: number;
   total: number;
   status: string;

@@ -56,6 +56,7 @@ export const holdSeats = (data: { showtime_id: number; seat_ids: number[] }) =>
   api.post("/bookings/hold", data);
 export const confirmBooking = (data: any) => api.post<Booking>("/bookings/confirm", data);
 export const getMyBookings = () => api.get<Booking[]>("/bookings/mine");
+export const getBooking = (id: number) => api.get<Booking>(`/bookings/${id}`);
 export const cancelBooking = (id: number) => api.delete<Booking>(`/bookings/${id}`);
 
 // ---- Payments ----
