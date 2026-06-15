@@ -202,7 +202,7 @@ def seed_movies(conn):
                 """INSERT INTO movies.movies
                    (title, description, duration_mins, languages, genres, formats,
                     certificate, release_date, poster_url, banner_url, trailer_url,
-                    cast, avg_rating, vote_count, is_upcoming)
+                    "cast", avg_rating, vote_count, is_upcoming)
                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,false)
                    RETURNING id""",
                 (m["title"], m["desc"], m["duration"], m["languages"], m["genres"],
@@ -216,7 +216,7 @@ def seed_movies(conn):
                 """INSERT INTO movies.movies
                    (title, description, duration_mins, languages, genres, formats,
                     certificate, release_date, poster_url, banner_url, trailer_url,
-                    cast, avg_rating, vote_count, is_upcoming)
+                    "cast", avg_rating, vote_count, is_upcoming)
                    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0,0,true)""",
                 (m["title"], m["desc"], m["duration"], m["languages"], m["genres"],
                  m["formats"], m["certificate"], date.today() + timedelta(days=m["release_in"]),
